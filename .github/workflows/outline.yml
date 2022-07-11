@@ -18,6 +18,5 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - run: |
-          sudo apt install sshpass -y
           export SSH_COMMAND='sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"'
           sshpass -p ::add-mask::${{ inputs.ssh_pass }} ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} $SSH_COMMAND
