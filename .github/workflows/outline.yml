@@ -20,5 +20,7 @@ jobs:
       SSH_HOST: "{{ inputs.ssh_host }}"
       SSH_COMMAND: 'sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"'
     steps:
+      - name: Masks secrets
+        run: echo "::add-mask::$SSH_PASS $SSH_USER $SSH_PASS"
       - name: Send a command to install via ssh
-        run: "sshpass -p ::add-mask::$SSH_PASS ssh $SSH_USER@$SSH_PASS $SSH_COMMAND"
+        run: "sshpass -p $SSH_PASS ssh $SSH_USER@$SSH_PASS $SSH_COMMAND"
