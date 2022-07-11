@@ -11,12 +11,11 @@ on:
       ssh_host:
         description: Host for ssh connection
         required: true
-
-
 jobs:
   Deploy:
     runs-on: ubuntu-20.04
     steps:
-      - run: |
-          export SSH_COMMAND='sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"'
-          sshpass -p ::add-mask::${{ inputs.ssh_pass }} ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} $SSH_COMMAND
+      - name: Send a command to install via ssh
+        run: "sshpass -p ::add-mask::${{ inputs.ssh_pass }} ssh ${{ inputs.ssh_user }}@${{ inputs.ssh_host }} $SSH_COMMAND"
+        env:
+          SSH_COMMAND: 'sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"'
