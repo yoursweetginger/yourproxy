@@ -1,0 +1,13 @@
+name: Install Outline server
+jobs:
+  Deploy:
+    runs-on: ubuntu-20.04
+    steps:
+      - run: |
+          apt install sshpass -y
+          export SSH_COMMAND='sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"'
+          sshpass -p $SSH_PASS ssh $SSH_USER@$SSH_HOST
+        env:
+          SSH_USER: ${{secrets.SSH_USER}}
+          SSH_PASS: ${{secrets.SSH_PASS}}
+          SSH_HOST: ${{secrets.SSH_HOST}}
