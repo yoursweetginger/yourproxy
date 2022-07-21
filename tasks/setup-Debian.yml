@@ -1,0 +1,3 @@
+- name: Update package manager cache
+  apt:
+    update_cache: yes

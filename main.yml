@@ -2,6 +2,9 @@
   become: true
   vars:
     ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'ANSIBLE_SSH_PASS') | default(omit) }}"
+  pre_tasks:
+    - include_tasks: setup-RedHat.yml
+      when: ansible_os_family == 'RedHat'
   roles:
     - role: geerlingguy.docker
       vars:
