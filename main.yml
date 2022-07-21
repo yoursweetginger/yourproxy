@@ -1,6 +1,22 @@
 - hosts: all
+  become: true
   vars:
     ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'ANSIBLE_SSH_PASS') | default(omit) }}"
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_install_compose: false
   tasks:
-    - debug:
-        var: ansible_facts
+    - name: Download script
+      get_url:
+        url: https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh
+        dest: /tmp
+        mode: 600
+
+    - name: Install Outline Server
+      shell: /tmp/install_server.sh
+      register: installation_output
+
+    - name: Show output
+      debug:
+        var: installation_output.stdout

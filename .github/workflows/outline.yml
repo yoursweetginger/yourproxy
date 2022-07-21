@@ -16,16 +16,17 @@ jobs:
   Deploy:
     runs-on: ubuntu-20.04
     steps:
-    - uses: actions/checkout@v3
-    # - uses: ./.github/actions/ansible
-    #   with:
-    #     playbook: main.yml
-    #     host: ${{ inputs.host }}
-    #     remote_user: ${{ inputs.remote_user }}
-    #     ssh_pass: ${{ inputs.ssh_pass }}
+    - name: Add mask
+      run: |
+        echo "::add-mask::${{ inputs.host }}"
+        echo "::add-mask::${{ inputs.remote_user }}"
+        echo "::add-mask::${{ inputs.ssh_pass }}"
+    - name: Checkout repo
+      uses: actions/checkout@v3
     - name: Run playbook
       uses: dawidd6/action-ansible-playbook@v2
       with:
+        requirements: galaxy-requirements.yml
         playbook: main.yml
         # key: ${{secrets.SSH_PRIVATE_KEY}}
         # Optional, literal inventory file contents
