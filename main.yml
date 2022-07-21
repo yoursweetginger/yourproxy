@@ -1,0 +1,6 @@
+- hosts: all
+  vars:
+    ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'ANSIBLE_SSH_PASS') | default(omit) }}"
+  tasks:
+    - debug:
+        var: ansible_facts

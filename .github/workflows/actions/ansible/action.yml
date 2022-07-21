@@ -1,0 +1,31 @@
+name: 'Ansible'
+description: 'Runs an Ansible playbook'
+inputs:
+  playbook:
+    description: 'Ansible playbook to run'
+    required: false
+    default: main.yml
+  host:
+    description: 'Host to apply Ansible playbook'
+    required: true
+  remote_user:
+    description: 'User for connect to host'
+    required: false
+    default: root
+  ssh_pass:
+    description: 'Pass for connect to host'
+    required: true
+runs:
+  using: 'docker'
+  image: 'docker://geerlingguy/docker-ubuntu2004-ansible:latest'
+  entrypoint: entrypoint.sh
+  args:
+    - ${{ inputs.playbook }}
+    - ${{ inputs.host }}
+  env:
+    ANSIBLE_FORCE_COLOR: "true"
+    ANSIBLE_HOST_KEY_CHECKING: "false"
+    # ANSIBLE_REMOTE_PORT: ${{ inputs.remote_port }}
+    ANSIBLE_REMOTE_USER: ${{ inputs.remote_user }}
+    ANSIBLE_SSH_PASS: ${{ inputs.ssh_pass }}
+    # ANSIBLE_PRIVATE_KEY_FILE: ${{ inputs.private_key }}

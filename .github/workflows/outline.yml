@@ -2,25 +2,24 @@ name: Install Outline server
 on:
   workflow_dispatch:
     inputs:
-      ssh_user:
-        description: Username for ssh connection
+      host:
+        description: Host for ssh connection
+        required: true
+      remote_user:
+        description: User for connect to host
         default: root
+        required: true
       ssh_pass:
         description: Password for ssh connection
-        required: true
-      ssh_host:
-        description: Host for ssh connection
         required: true
 jobs:
   Deploy:
     runs-on: ubuntu-20.04
-    env:
-      SSH_USER: "{{ inputs.ssh_user }}"
-      SSH_PASS: "{{ inputs.ssh_pass }}"
-      SSH_HOST: "{{ inputs.ssh_host }}"
-      SSH_COMMAND: 'sudo bash -c "$(wget -qO- https://raw.githubusercontent.com/Jigsaw-Code/outline-server/master/src/server_manager/install_scripts/install_server.sh)"'
     steps:
-      - name: Masks secrets
-        run: echo "::add-mask::$SSH_PASS $SSH_USER $SSH_PASS"
-      - name: Send a command to install via ssh
-        run: "sshpass -p $SSH_PASS ssh $SSH_USER@$SSH_PASS $SSH_COMMAND"
+    - uses: actions/checkout@v3
+    - uses: ./.github/actions/ansible
+      with:
+        playbook: main.yml
+        inventory: ${{ inputs.host }}
+        remote_user: ${{ inputs.remote_user }}
+        ssh_pass: ${{ inputs.ssh_pass }}
