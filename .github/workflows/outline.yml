@@ -17,9 +17,26 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v3
-    - uses: ./.github/actions/ansible
+    # - uses: ./.github/actions/ansible
+    #   with:
+    #     playbook: main.yml
+    #     host: ${{ inputs.host }}
+    #     remote_user: ${{ inputs.remote_user }}
+    #     ssh_pass: ${{ inputs.ssh_pass }}
+    - name: Run playbook
+      uses: dawidd6/action-ansible-playbook@v2
       with:
         playbook: main.yml
-        inventory: ${{ inputs.host }}
-        remote_user: ${{ inputs.remote_user }}
-        ssh_pass: ${{ inputs.ssh_pass }}
+        # key: ${{secrets.SSH_PRIVATE_KEY}}
+        # Optional, literal inventory file contents
+        inventory: |
+          [all]
+          ${{ inputs.host }}
+        # options: |
+        #   --extra-vars hello=there
+      env:
+        ANSIBLE_FORCE_COLOR: "true"
+        ANSIBLE_HOST_KEY_CHECKING: "false"
+        ANSIBLE_REMOTE_USER: ${{ inputs.remote_user }}
+        ANSIBLE_SSH_PASS: ${{ inputs.ssh_pass }}
+
